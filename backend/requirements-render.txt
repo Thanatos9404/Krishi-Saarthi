@@ -1,3 +1,4 @@
+# Lightweight requirements for Render deployment
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pandas==2.1.4
