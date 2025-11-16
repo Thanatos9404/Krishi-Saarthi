@@ -1,0 +1,185 @@
+import React from 'react';
+import { TrendingUp, TrendingDown, AlertCircle, DollarSign, Target, Award } from 'lucide-react';
+import YieldChart from './YieldChart';
+import PriceForecastChart from './PriceForecastChart';
+import RiskGauge from './RiskGauge';
+
+const Dashboard = ({ simulationData }) => {
+  if (!simulationData) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="text-center max-w-md">
+          <div className="mb-6 animate-pulse-soft">
+            <Target className="w-24 h-24 mx-auto text-farm-green-400" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-700 mb-3">
+            Welcome to KrishiSaarthi
+          </h3>
+          <p className="text-gray-600 leading-relaxed">
+            Configure your farming parameters in the sidebar and click "Run Simulation" 
+            to get AI-powered insights for your crop planning decisions.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const { yield: yieldData, costs, revenue, profit, roi_percentage, risk } = simulationData;
+
+  return (
+    <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+      {/* Header Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Yield Card */}
+        <div className="card-farm card-glow p-6 animate-fade-in">
+          <div className="flex items-start justify-between mb-3">
+            <div className="bg-farm-green-100 p-3 rounded-xl">
+              <TrendingUp className="w-6 h-6 text-farm-green-600" />
+            </div>
+            <span className="text-xs font-semibold text-farm-green-600 bg-farm-green-100 px-3 py-1 rounded-full">
+              {(yieldData.confidence * 100).toFixed(0)}% Confidence
+            </span>
+          </div>
+          <h3 className="text-sm font-semibold text-gray-600 mb-1">Expected Yield</h3>
+          <p className="text-3xl font-bold text-gray-900">
+            {yieldData.total_production_quintals.toFixed(1)}
+          </p>
+          <p className="text-sm text-gray-500 mt-1">quintals</p>
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-600">
+              {yieldData.yield_per_hectare.toFixed(0)} kg/hectare
+            </p>
+          </div>
+        </div>
+
+        {/* Cost Card */}
+        <div className="card-farm card-glow p-6 animate-fade-in" style={{animationDelay: '0.1s'}}>
+          <div className="flex items-start justify-between mb-3">
+            <div className="bg-earth-brown-100 p-3 rounded-xl">
+              <DollarSign className="w-6 h-6 text-earth-brown-600" />
+            </div>
+          </div>
+          <h3 className="text-sm font-semibold text-gray-600 mb-1">Total Cost</h3>
+          <p className="text-3xl font-bold text-gray-900">
+            ₹{(costs.total_cost / 1000).toFixed(1)}k
+          </p>
+          <p className="text-sm text-gray-500 mt-1">cultivation cost</p>
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-600">
+              ₹{costs.cost_per_quintal.toFixed(0)} per quintal
+            </p>
+          </div>
+        </div>
+
+        {/* Profit Card */}
+        <div className="card-farm card-glow p-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
+          <div className="flex items-start justify-between mb-3">
+            <div className={`p-3 rounded-xl ${profit >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+              {profit >= 0 ? (
+                <TrendingUp className="w-6 h-6 text-green-600" />
+              ) : (
+                <TrendingDown className="w-6 h-6 text-red-600" />
+              )}
+            </div>
+            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+              profit >= 0 
+                ? 'bg-green-100 text-green-600' 
+                : 'bg-red-100 text-red-600'
+            }`}>
+              {roi_percentage.toFixed(1)}% ROI
+            </span>
+          </div>
+          <h3 className="text-sm font-semibold text-gray-600 mb-1">Expected Profit</h3>
+          <p className={`text-3xl font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            ₹{(Math.abs(profit) / 1000).toFixed(1)}k
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            {profit >= 0 ? 'profit' : 'loss'}
+          </p>
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-600">
+              Revenue: ₹{(revenue / 1000).toFixed(1)}k
+            </p>
+          </div>
+        </div>
+
+        {/* Risk Card */}
+        <div className="card-farm card-glow p-6 animate-fade-in" style={{animationDelay: '0.3s'}}>
+          <div className="flex items-start justify-between mb-3">
+            <div className={`p-3 rounded-xl ${
+              risk.overall_risk_score < 40 ? 'bg-green-100' :
+              risk.overall_risk_score < 70 ? 'bg-yellow-100' : 'bg-red-100'
+            }`}>
+              <AlertCircle className={`w-6 h-6 ${
+                risk.overall_risk_score < 40 ? 'text-green-600' :
+                risk.overall_risk_score < 70 ? 'text-yellow-600' : 'text-red-600'
+              }`} />
+            </div>
+          </div>
+          <h3 className="text-sm font-semibold text-gray-600 mb-1">Risk Score</h3>
+          <p className={`text-3xl font-bold ${
+            risk.overall_risk_score < 40 ? 'text-green-600' :
+            risk.overall_risk_score < 70 ? 'text-yellow-600' : 'text-red-600'
+          }`}>
+            {risk.overall_risk_score.toFixed(0)}
+          </p>
+          <p className="text-sm text-gray-500 mt-1">{risk.risk_category}</p>
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className={`h-2 rounded-full ${
+                  risk.overall_risk_score < 40 ? 'bg-green-500' :
+                  risk.overall_risk_score < 70 ? 'bg-yellow-500' : 'bg-red-500'
+                }`}
+                style={{ width: `${risk.overall_risk_score}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <YieldChart yieldData={yieldData} />
+        <RiskGauge riskData={risk} />
+      </div>
+
+      {/* Risk Insights */}
+      <div className="card-farm card-glow p-6 animate-fade-in">
+        <div className="flex items-center mb-4">
+          <Award className="w-6 h-6 text-farm-green-600 mr-2" />
+          <h3 className="text-xl font-bold text-gray-800">Risk Insights</h3>
+        </div>
+        <div className="space-y-2">
+          {risk.insights.map((insight, idx) => (
+            <div 
+              key={idx} 
+              className="flex items-start p-3 bg-farm-green-50 rounded-lg border-l-4 border-farm-green-500"
+            >
+              <p className="text-sm text-gray-700">{insight}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cost Breakdown */}
+      <div className="card-farm card-glow p-6 animate-fade-in">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Cost Breakdown</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {Object.entries(costs.breakdown).map(([key, value]) => (
+            <div key={key} className="bg-gray-50 rounded-xl p-4">
+              <p className="text-xs text-gray-600 mb-1 capitalize">
+                {key.replace(/_/g, ' ')}
+              </p>
+              <p className="text-lg font-bold text-gray-900">
+                ₹{(value / 1000).toFixed(1)}k
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

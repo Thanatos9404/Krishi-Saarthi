@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #f0fdf4 0%, #faf8f5 100%);
+  min-height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #86efac;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4ade80;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Custom card styles */
+.card-farm {
+  @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-farm-green-100;
+}
+
+.card-glow {
+  box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.1), 
+              0 2px 4px -1px rgba(34, 197, 94, 0.06),
+              0 0 0 1px rgba(34, 197, 94, 0.05);
+}
+
+.card-glow:hover {
+  box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.1),
+              0 10px 10px -5px rgba(34, 197, 94, 0.04),
+              0 0 0 1px rgba(34, 197, 94, 0.1);
+}
+
+/* Input styles */
+.input-farm {
+  @apply w-full px-4 py-3 rounded-xl border-2 border-farm-green-200 focus:border-farm-green-500 focus:ring-4 focus:ring-farm-green-100 outline-none transition-all duration-200;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-farm-green-500 to-farm-green-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:from-farm-green-600 hover:to-farm-green-700 transition-all duration-300 transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply bg-white text-farm-green-600 border-2 border-farm-green-500 font-semibold px-6 py-3 rounded-xl hover:bg-farm-green-50 transition-all duration-300;
+}
